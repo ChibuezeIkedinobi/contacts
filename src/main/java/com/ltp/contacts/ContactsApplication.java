@@ -16,7 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class ContactsApplication implements CommandLineRunner {
 
 	ContactRepository contactRepository;
-	
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(ContactsApplication.class, args);
