@@ -25,7 +25,7 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeRequests()   // authorize all http requests
-                .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")    // authorization rules. user has no authority to delete
+                .antMatchers(HttpMethod.DELETE, "/delete/{id}/contact").hasRole("ADMIN")  // authorization rules. user has no authority to delete
                 .antMatchers(HttpMethod.POST).hasAnyRole("ADMIN", "USER")    // authorization rules. user and admin have the authority to POST request(create)
                 .anyRequest().authenticated()    // any requests need to be authenticated
                 .and()
