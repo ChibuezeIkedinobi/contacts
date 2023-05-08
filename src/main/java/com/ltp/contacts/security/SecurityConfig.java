@@ -3,6 +3,7 @@ package com.ltp.contacts.security;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
@@ -22,7 +23,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()   // authorize all http requests
+                .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")    // authorization rules. user has no authority to delete
+                .antMatchers(HttpMethod.POST).hasAnyRole("ADMIN", "USER")    // authorization rules. user and admin have the authority to POST request(create)
                 .anyRequest().authenticated()    // any requests need to be authenticated
                 .and()
                 .httpBasic()     // authenticate these requests using basic authentication
@@ -33,12 +37,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService users() {      // contains User Details
+    public UserDetailsService users() {      // contains User Details in order to authenticate users
 
         UserDetails admin = User.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("admin-pass"))
-                .roles("ADMIN")
+                .roles("ADMIN")   // for authorization purposes
                 .build();
 
         UserDetails user = User.builder()
